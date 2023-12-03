@@ -9,18 +9,18 @@ import org.springframework.stereotype.Repository;
 import com.example.jdbctest.exceptions.NotFoundUser;
 
 @Repository
-public non-sealed class UserDAOImpl implements UserDAO {
+public class UserRepository {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  private String GET_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-  private String GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-  private String CREATE_USER = "INSERT INTO users (name, email) VALUES (?, ?)";
-  private String UPDATE_USER = "UPDATE users SET name = ?, email = ? WHERE id = ?";
-  private String DELETE_USER = "DELETE FROM users WHERE id = ?";
+  private final String GET_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
+  private final String GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
+  private final String CREATE_USER = "INSERT INTO users (name, email) VALUES (?, ?)";
+  private final String UPDATE_USER = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+  private final String DELETE_USER = "DELETE FROM users WHERE id = ?";
 
-  public User getUserById(int id) throws NotFoundUser{
+  public User getUserById(int id) throws NotFoundUser {
     try {
       return jdbcTemplate.query(GET_USER_BY_ID, new UserRowMapper(), id).get(0);
     } catch (Exception e) {

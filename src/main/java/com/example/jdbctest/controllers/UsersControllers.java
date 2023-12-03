@@ -14,12 +14,12 @@ import com.example.jdbctest.exceptions.DeleteException;
 import com.example.jdbctest.exceptions.NotFoundUser;
 import com.example.jdbctest.exceptions.UpsertException;
 import com.example.jdbctest.models.users.User;
-import com.example.jdbctest.models.users.UserDAOImpl;
+import com.example.jdbctest.models.users.UserRepository;
 
 @RestController("/api/users")
 public class UsersControllers {
   @Autowired
-  private final UserDAOImpl userDAO = new UserDAOImpl();
+  private final UserRepository userRepository = new UserRepository();
 
   @GetMapping("/hello")
   public String Hello() {
@@ -28,13 +28,13 @@ public class UsersControllers {
 
   @GetMapping()
   public List<User> getAllUsers() {
-    return userDAO.getAllUsers();
+    return userRepository.getAllUsers();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<User> getUserById(@PathVariable int id) throws NotFoundUser {
     try {
-      return ResponseEntity.ok(userDAO.getUserById(id));
+      return ResponseEntity.ok(userRepository.getUserById(id));
     } catch (Exception e) {
       throw new NotFoundUser(String.valueOf(id));
     }
@@ -43,7 +43,7 @@ public class UsersControllers {
   @GetMapping("/email/{email}")
   public User getUserByEmail(@PathVariable String email) throws NotFoundUser {
     try {
-      return userDAO.getUserByEmail(email);
+      return userRepository.getUserByEmail(email);
     } catch (Exception e) {
       throw new NotFoundUser(email);
     }
@@ -52,7 +52,7 @@ public class UsersControllers {
   @PostMapping("/create")
   public String createUser(User user) throws UpsertException {
     try {
-      userDAO.createUser(user);
+      userRepository.createUser(user);
       return "User created successfully";
     } catch (Exception e) {
       throw new UpsertException();
@@ -62,7 +62,7 @@ public class UsersControllers {
   @PostMapping("/update")
   public String updateUser(User user) throws UpsertException {
     try {
-      userDAO.updateUser(user);
+      userRepository.updateUser(user);
       return "User updated successfully";
     } catch (Exception e) {
       throw new UpsertException();
@@ -72,8 +72,8 @@ public class UsersControllers {
   @DeleteMapping("/delete/{id}")
   public String deleteUser(@PathVariable int id) throws DeleteException {
     try {
-      userDAO.getUserById(id);
-      return userDAO.deleteUser(id) ? "User deleted" : "User not deleted";
+      userRepository.getUserById(id);
+      return userRepository.deleteUser(id) ? "User deleted" : "User not deleted";
     } catch (Exception e) {
       throw new DeleteException(id);
     }
